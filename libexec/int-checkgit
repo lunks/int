@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Usage: int gitcheck
+# Summary: Check if there are any uncommited changes.
 if [[ -n $(git status -s 2> /dev/null) ]]; then
   echo "You have uncommited changes. Please commit them."
   exit 1

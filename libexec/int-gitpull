@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Usage: int gitpull
+# Summary: Pulls latest changes on the project with rebase.
+# Help: This just runs `git pull --rebase`.
 git pull --rebase
 if [[ $? -ne 0 ]]
 then
