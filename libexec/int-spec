@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+coverage=on rspec spec
+if [[ $? -ne 0 ]]
+then
+  echo "Your code is not fully covered or not all tests passed. Opening coverage page anyway."
+  open coverage/index.html
+  exit 1
+fi

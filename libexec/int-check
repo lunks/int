@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+output = `heroku config -s --app #{ENV['APP']}|grep INTEGRATING_BY`
+integrating_by = output.split('=')[1] # Eu sei que é tosco, mas foda-se
+print integrating_by

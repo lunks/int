@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+user = `whoami`
+integrating_by = `int check`
+if integrating_by != "" && integrating_by != user
+  puts "Lock is currently set to #{integrating_by}."
+  exit 1
+end
+if integrating_by == user
+  exit
+else
+  system "heroku config:add INTEGRATING_BY=#{user}"
+end

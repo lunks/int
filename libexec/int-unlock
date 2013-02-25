@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+heroku config:remove INTEGRATING_BY --app $APP

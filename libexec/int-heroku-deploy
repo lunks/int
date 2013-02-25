@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+def app
+  ENV['APP']
+end
+
+def tasks
+  deploy
+  migrate_and_seed
+  seed
+end
+
+def deploy
+  abort_if_cmd_fails "git push git@heroku.com:#{app}.git master"
+end
+
+def migrate_and_seed
+  abort_if_cmd_fails "heroku run rake db:migrate db:seed --app #{app}"
+end
+
+def abort_if_cmd_fails command, &block
+  exec = system command
+  unless exec == true
+    yield if block_given?
+    exit 1
+  end
+end
+
+tasks

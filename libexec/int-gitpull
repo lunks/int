@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+git pull --rebase
+if [[ $? -ne 0 ]]
+then
+  echo "It seems you had some conflicts. Please fix them and try integrating again."
+  exit 1
+fi

@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+
+def tasks
+  [pre_tasks, 'int gitpull', 'int bundle','int migrate', 'int push', post_tasks].flatten
+end
+
+def pre_tasks
+  if ENV['PRE_TASKS'] != nil
+    ENV['PRE_TASKS'].split(',')
+  else
+    []
+  end
+end
+
+def post_tasks
+  if ENV['POST_TASKS'] != nil
+    ENV['POST_TASKS'].split(',')
+  else
+    []
+  end
+end
+
+def unlock
+  system('int unlock')
+end
+
+def lock
+  abort_if_cmd_fails 'int lock'
+end
+
+def checkgit
+  abort_if_cmd_fails 'int checkgit'
+end
+
+def run_tasks
+  tasks.each do |task|
+    abort_if_cmd_fails task do
+      # An error has occurred, lets unlock anyway
+      unlock
+    end
+  end
+  #We successfully integrated
+  unlock
+end
+
+def abort_if_cmd_fails command, &block
+  exec = system command
+  unless exec == true
+    yield if block_given?
+    exit 1
+  end
+end
+
+checkgit
+lock
+run_tasks
+puts "Integrated successfully."
+exit 0
