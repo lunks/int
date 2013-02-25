@@ -2,7 +2,7 @@
 
 
 def tasks
-  [pre_tasks, 'int gitpull', 'int bundle','int migrate', 'int push', post_tasks].flatten
+  [pre_tasks, 'int gitpull', 'int bundle','int spec', 'int migrate', 'int push', post_tasks].flatten
 end
 
 def pre_tasks
