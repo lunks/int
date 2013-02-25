@@ -7,7 +7,6 @@ end
 def tasks
   deploy
   migrate_and_seed
-  seed
 end
 
 def deploy
