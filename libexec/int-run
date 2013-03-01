@@ -1,8 +1,32 @@
 #!/usr/bin/env ruby
-
+# Usage: int run
+# Summary: Runs integration. For more info, run 'int help run'
+# Help: This is the main command and the one you should use when you want to integrate.
+# This will:
+#
+# * Check if you forgot to commit something in your current project;
+# * Lock integration for you;
+# * Pull the latest changes from the git repository;
+# * Run bundle install;
+# * Migrate the database;
+# * Run all specs;
+# * Push to the git repo.
+# * Deploys to Heroku to the app set as APP on .rvmrc.
+#
+# Currently, there are additional tasks that you can add.
+#
+# Pre tasks:
+# Pre tasks runs before int pulls changes from the remote repo.
+# Just add the commands, separated by comma, on your .rvmrc:
+# PRE_TASKS=rake project:custom_task,echo "I'm ready!"
+#
+# Post tasks:
+# Post tasks run after the changes have been pushed to Heroku.
+# Just add the commands, separated by comma, on your .rvmrc:
+# POST_TASKS=rake hipchat:notify,rake dashboard:deploy_payload
 
 def tasks
-  [pre_tasks, 'int gitpull', 'int bundle','int spec', 'int migrate', 'int push', post_tasks].flatten
+  [pre_tasks, 'int gitpull', 'int bundle', 'int migrate', 'int spec', 'int push', 'int heroku-deploy', post_tasks].flatten
 end
 
 def pre_tasks

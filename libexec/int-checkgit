@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Usage: int gitcheck
-# Summary: Check if there are any uncommited changes.
+# Help: This will check if there any uncommited changes. You cannot integrate without commiting your current work.
 if [[ -n $(git status -s 2> /dev/null) ]]; then
   echo "You have uncommited changes. Please commit them."
   exit 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # Usage: int check
-# Summary: Checks who is integratings.
+# Summary: Checks who is integrating
 # Help: This will print whoever is currently integrating and locking you out.
 output = `heroku config -s --app #{ENV['APP']}|grep INTEGRATING_BY`
 integrating_by = output.split('=')[1] # Eu sei que é tosco, mas foda-se

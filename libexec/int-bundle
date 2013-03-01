@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Usage: int bundle
-# Summary: Runs `bundle install` on the current directory.
 # Help: This will run `bundle install` and install the required gems on the current project.
 bundle --quiet
 if [[ $? -ne 0 ]]
