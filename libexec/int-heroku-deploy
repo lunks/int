@@ -14,10 +14,11 @@ def deploy
 end
 
 def migrate_and_seed
-  abort_if_cmd_fails "heroku run rake db:migrate db:seed --app #{app}"
+  abort_if_cmd_fails "heroku run rake db:migrate db:seed --app #{app}" unless ENV['INT_DISABLE_MIGRATE'] == 'true'
 end
 
 def abort_if_cmd_fails command, &block
+  return if command.nil?
   exec = system command
   unless exec == true
     yield if block_given?
