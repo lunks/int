@@ -26,7 +26,11 @@
 # POST_TASKS=rake hipchat:notify,rake dashboard:deploy_payload
 
 def tasks
-  [pre_tasks, 'int gitpull', 'int bundle', 'int migrate', 'int spec', 'int push', 'int heroku-deploy', post_tasks].flatten
+  [pre_tasks, 'int gitpull', 'int bundle', migrate_task, 'int spec', 'int push', 'int heroku-deploy', post_tasks].flatten
+end
+
+def migrate_task
+  'int migrate' unless ENV["INT_DISABLE_MIGRATE"] == 'on'
 end
 
 def pre_tasks
