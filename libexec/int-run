@@ -30,7 +30,7 @@ def tasks
 end
 
 def migrate_task
-  'int migrate' unless ENV["INT_DISABLE_MIGRATE"] == 'on'
+  'int migrate' unless ENV["INT_DISABLE_MIGRATE"] == 'true'
 end
 
 def pre_tasks
