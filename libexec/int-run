@@ -73,6 +73,7 @@ def run_tasks
 end
 
 def abort_if_cmd_fails command, &block
+  return if command.nil?
   exec = system command
   unless exec == true
     yield if block_given?
