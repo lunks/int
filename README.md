@@ -1,4 +1,8 @@
-## int, async continuous integration
+## int, asynchronous continuous integration
+
+int is a simple way to ensure your code is always on sync, fully tested
+and has full test coverage. All without a different CI machine. This is
+meant to run right from the developer's machine.
 
 ## Requirements
 
