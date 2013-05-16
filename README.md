@@ -23,7 +23,7 @@ brew install https://raw.github.com/Helabs/int/master/int.rb --HEAD
 
 ## Usage
 
-1. Add your Heroku app to `.rvmrc` using the environment variable APP:
+1. Add your Heroku app to `.rvmrc` using the environment variable `APP`:
 
 ```
 APP=my_heroku_app
