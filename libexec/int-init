@@ -52,7 +52,7 @@ if [ -z "$print" ]; then
     echo
   } >&2
 
-  exit 1
+  exit
 fi
 
 echo "export PATH=\"\${PATH}:${_INT_ROOT}/bin\""
