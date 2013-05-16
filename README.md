@@ -61,6 +61,8 @@ You can checkout the list of tasks on the [int-run](libexec/int-run) command.
 * We only support OSX;
 * We only support RSpec;
 * We only support Rails.
+* Upgrade currently only works by doing `brew rm int` and reinstalling.
+  There is an issue opened at [homebrew](https://github.com/mxcl/homebrew/issues/13197).
 
 ## License
 
