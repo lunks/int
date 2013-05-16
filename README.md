@@ -22,7 +22,7 @@ provided for your OS.
 1. Install using brew and follow the instructions that follow.
 
 ```
-brew install https://raw.github.com/Helabs/int/master/int.rb --HEAD
+brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
 ```
 
 ## Usage
