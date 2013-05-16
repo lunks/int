@@ -19,7 +19,7 @@ provided for your OS.
 
 ## Getting Started
 
-1. Install using brew and follow the instructions that follow.
+Install using brew and follow the instructions that follow.
 
 ```
 brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
@@ -27,13 +27,13 @@ brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
 
 ## Usage
 
-1. Add your Heroku app to `.rvmrc` using the environment variable `APP`:
+* Add your Heroku app to `.rvmrc` using the environment variable `APP`:
 
 ```
 APP=my_heroku_app
 ```
 
-2. If you always want 100% code coverage, add this on
+* If you always want 100% code coverage, add this on
    top of your spec/spec_helper.rb:
 
 ```ruby
@@ -48,7 +48,7 @@ end
 
 int already sets `COVERAGE` to on when running int spec.
 
-3. Finally, integrate your code!
+* Finally, integrate your code!
 
 ```
 int run
