@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-coverage=on rspec spec
+COVERAGE=on coverage=on rspec spec
 if [[ $? -ne 0 ]]
 then
   echo "Your code is not fully covered or not all tests passed. Opening coverage page anyway."
