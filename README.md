@@ -50,8 +50,7 @@ int already sets `COVERAGE` to on when running int spec.
 int run
 ```
 
-You can checkout the list of tasks on the [int-run
-command](libexec/int-run) command.
+You can checkout the list of tasks on the [int-run](libexec/int-run) command.
 
 ## Features/Problems
 
