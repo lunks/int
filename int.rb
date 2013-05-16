@@ -4,6 +4,7 @@ class Int < Formula
 
   def install
     prefix.install Dir["*"]
-    system "#{prefix}/bin/int init"
+    sub_message = `#{prefix}/bin/int init`
+    ohai sub_message
   end
 end
