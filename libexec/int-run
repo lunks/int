@@ -8,7 +8,7 @@
 # * Lock integration for you;
 # * Pull the latest changes from the git repository;
 # * Run bundle install;
-# * Migrate the database;
+# * Migrate the database (unless INT_DISABLE_MIGRATE is set to true);
 # * Run all specs;
 # * Push to the git repo.
 # * Deploys to Heroku to the app set as APP on .rvmrc.
