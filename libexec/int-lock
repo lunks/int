@@ -8,5 +8,5 @@ end
 if integrating_by == user
   exit
 else
-  system "heroku config:add INTEGRATING_BY=#{user}"
+  system "heroku config:add INTEGRATING_BY=#{user} --app #{ENV['APP']}"
 end
