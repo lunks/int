@@ -22,13 +22,15 @@ provided for your OS.
 Install using brew and follow the instructions that follow.
 
 ```
-brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
+$ brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
 ```
 
-## Update int version
+## Upgrading
 
-```
-brew reinstall int --HEAD
+You can upgrade by reinstalling it.
+
+```shell
+$ brew reinstall int --HEAD
 ```
 
 
@@ -57,15 +59,39 @@ int already sets `COVERAGE` to on when running int spec.
 
 * Finally, integrate your code!
 
-```
-int run
+```shell
+$ int run
 ```
 
 You can checkout the list of tasks on the [int-run](libexec/int-run) command.
 
+## Deploying to production
+
+* Add your Heroku production app to `.rvmrc` using the environment variable `PRODUCTION_APP`:
+
+```
+PRODUCTION_APP=my_heroku_app
+```
+
+* Checkout your production branch, merge anything if necessary:
+
+```shell
+$ git checkout -b production
+$ git merge master
+```
+
+* Finally, integrate to production!
+
+```shell
+$ int production
+```
+
+You can checkout the list of tasks on the [int-run](libexec/int-production) command.
+
 ## Features/Problems
 
-* We only support OSX;
+* We only support OSX, even if Linux probably works (pull requests
+  welcome);
 * We only support RSpec;
 * We only support Rails.
 * Upgrade currently only works by doing `brew rm int` and reinstalling.
