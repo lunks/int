@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 user = `whoami`.chomp
-integrating_by = `int check`
+integrating_by = `int check`.chomp
 if integrating_by != "" && integrating_by != user
   puts "Lock is currently set to #{integrating_by}."
   exit 1
