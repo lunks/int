@@ -25,6 +25,13 @@ Install using brew and follow the instructions that follow.
 brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
 ```
 
+## Update int version
+
+```
+brew reinstall int --HEAD
+```
+
+
 ## Usage
 
 * Add your Heroku app to `.rvmrc` using the environment variable `APP`:
