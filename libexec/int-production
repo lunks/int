@@ -16,8 +16,8 @@ def tasks
 end
 
 def check_git_branch
-  current_branch = `git rev-parse --abbrev-ref HEAD`.chomp
-  if current_branch.strip != "production"
+  current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+  if current_branch != "production"
     puts "You can't do a deploy from '#{current_branch}'. Please use 'production' branch."
     exit
   end
@@ -31,7 +31,7 @@ end
 
 def maintenance
   print "\nPut in maintenance mode? [yN] "
-  maintenance = STDIN.gets.chomp.downcase == 'y'
+  maintenance = STDIN.gets.strip.downcase == 'y'
   if maintenance
     abort_if_cmd_fails "heroku maintenance:on --app #{app}"
   end
