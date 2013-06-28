@@ -16,7 +16,7 @@ def tasks
 end
 
 def check_git_branch
-  current_branch = `git rev-parse --abbrev-ref HEAD`
+  current_branch = `git rev-parse --abbrev-ref HEAD`.chomp
   if current_branch.strip != "production"
     puts "You can't do a deploy from '#{current_branch}'. Please use 'production' branch."
     exit
