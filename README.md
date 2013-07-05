@@ -6,7 +6,7 @@ meant to run right from the developer's machine.
 
 ## Requirements
 
-* OSX and Linux is currently supported.
+* OSX and Linux are currently supported.
 
 * [heroku-toolbelt](https://toolbelt.heroku.com/). You can either
 install it with `brew install heroku-toolbelt` or use the package
@@ -43,7 +43,7 @@ $ brew reinstall int --HEAD
 ```
 ### Linux
 
-You can upgrade by make a `git -pull` in int folder. And voilá.
+You can upgrade by doing a `git pull` in int folder. And voilá.
 
 ## Usage
 
