@@ -61,6 +61,10 @@ def checkgit
   abort_if_cmd_fails 'int checkgit'
 end
 
+def check_for_app_var
+  raise "There is no APP in your environment. Please add your Heroku app as an environment variable named APP." if ENV['APP'] == nil
+end
+
 def run_tasks
   tasks.each do |task|
     abort_if_cmd_fails task do
@@ -81,6 +85,7 @@ def abort_if_cmd_fails command, &block
   end
 end
 
+check_for_app_var
 checkgit
 lock
 run_tasks
