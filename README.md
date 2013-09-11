@@ -50,7 +50,7 @@ You can upgrade by doing a `git pull` in int folder. And voilá.
 * Add your Heroku app to `.rvmrc` using the environment variable `APP`:
 
 ```
-APP=my_heroku_app
+export APP=my_heroku_app
 ```
 
 * If you always want 100% code coverage, add this on
