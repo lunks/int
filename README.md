@@ -6,8 +6,7 @@ meant to run right from the developer's machine.
 
 ## Requirements
 
-* OSX is currently supported. Linux might work, but it's not throughly
-  tested.
+* OSX and Linux are currently supported.
 
 * [heroku-toolbelt](https://toolbelt.heroku.com/). You can either
 install it with `brew install heroku-toolbelt` or use the package
@@ -19,20 +18,32 @@ provided for your OS.
 
 ## Getting Started
 
+### OSX
+
 Install using brew and follow the instructions that follow.
 
 ```
 $ brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
 ```
 
-## Upgrading
 
+### Linux
+
+Make a `git clone` of int and add the `/bin/int` path on `.bashrc`, like:
+```
+$ eval "$(/home/your_user/path/to/int/bin/int init -)"
+```
+
+## Upgrading
+### OSX
 You can upgrade by reinstalling it.
 
 ```shell
 $ brew reinstall int --HEAD
 ```
+### Linux
 
+You can upgrade by doing a `git pull` in int folder. And voilá.
 
 ## Usage
 
