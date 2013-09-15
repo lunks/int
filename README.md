@@ -23,7 +23,7 @@ provided for your OS.
 Install using brew and follow the instructions that follow.
 
 ```
-$ brew install https://raw.github.com/Helabs/int/stable/int.rb --HEAD
+$ brew install https://raw.github.com/Helabs/int/master/int.rb
 ```
 
 
@@ -36,37 +36,22 @@ $ eval "$(/home/your_user/path/to/int/bin/int init -)"
 
 ## Upgrading
 ### OSX
-You can upgrade by reinstalling it.
+You can upgrade by using brew.
 
 ```shell
-$ brew reinstall int --HEAD
+$ brew upgrade int
 ```
+If you were using a version before `0.0.1`, remove it before installing
+this one.
+
 ### Linux
 
 You can upgrade by doing a `git pull` in int folder. And voilá.
 
 ## Usage
 
-* Add your Heroku app to `.rvmrc` using the environment variable `APP`:
-
-```
-export APP=my_heroku_app
-```
-
-* If you always want 100% code coverage, add this on
-   top of your spec/spec_helper.rb:
-
-```ruby
-if ENV['COVERAGE'] == 'on'
-  require 'simplecov'
-  SimpleCov.start 'rails' do
-    minimum_coverage 100
-    add_filter "app/admin/"
-  end
-end
-```
-
-int already sets `COVERAGE` to on when running int spec.
+* Run `int setup` into your working directory. Read its contents for
+  more info.
 
 * Finally, integrate your code!
 
@@ -78,10 +63,11 @@ You can checkout the list of tasks on the [int-run](libexec/int-run) command.
 
 ## Deploying to production
 
-* Add your Heroku production app to `.rvmrc` using the environment variable `PRODUCTION_APP`:
+* Add your Heroku production app to `.int`:
 
-```
-PRODUCTION_APP=my_heroku_app
+```yaml
+production:
+  app: my-app-production
 ```
 
 * Checkout your production branch, merge anything if necessary:
@@ -94,10 +80,8 @@ $ git merge master
 * Finally, integrate to production!
 
 ```shell
-$ int production
+$ int run production
 ```
-
-You can checkout the list of tasks on the [int-run](libexec/int-production) command.
 
 ## Features/Problems
 
@@ -105,8 +89,6 @@ You can checkout the list of tasks on the [int-run](libexec/int-production) comm
   welcome);
 * We only support RSpec;
 * We only support Rails.
-* Upgrade currently only works by doing `brew rm int` and reinstalling.
-  There is an issue opened at [homebrew](https://github.com/mxcl/homebrew/issues/13197).
 
 ## License
 
