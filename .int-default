@@ -1,0 +1,17 @@
+# vim: set ft=yaml:
+defaults: &defaults
+  bundle: true
+  database_tasks: 'db:migrate db:seed'
+  run_tests: true
+  use_tags: false
+  minimum_coverage: true
+  migrate_locally: true
+  branch: master
+staging:
+  <<: *defaults
+  app: my-app-staging
+production:
+  <<: *defaults
+  app: my-app-production
+  branch: production
+  use_tags: true

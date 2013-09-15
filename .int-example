@@ -1,0 +1,96 @@
+# vim: set ft=yaml:
+# Int settings
+#
+# This file is where your settings live.
+# For all environments, the defaults are these:
+#  bundle: true
+#  database_tasks: 'db:migrate db:seed'
+#  run_tests: true
+#  use_tags: false
+#  minimum_coverage: true
+#  migrate_locally: true
+#  branch: master
+#
+#
+#For staging (the default environment):
+#
+#  app: my-app-staging
+#
+#For production (when you run `int run production`):
+#
+#  app: my-app-production
+#  branch: production
+#  use_tags: true
+#
+#
+# Each of these settings can be setup with the following (defaults right below it):
+#
+# "branch" can be set to false or a string.
+# If branch is set to false, the setting will be ignored.
+# If set to a string, we will always check which branch you're in before integrating.
+# Default is master for staging and production for production.
+#
+# branch: master
+#
+#
+# minimum_coverage can be either true, a number, or false.
+# When set to false, it will just ignore your coverage settings.
+# When set to true, it will check if your spec/spec_helper.rb is set to fail
+# if code coverage is not 100%
+# When set to a number, we will check if your spec/spec_helper.rb is set to
+# that specific number.
+#
+# minimum_coverage: true
+#
+#
+# bundle can be either true or false. If set to false,
+# "bundle install" will be skipped.
+#
+# bundle: true
+#
+#
+# migrate_locally will run rake db:migrate test:prepare if set to true.
+#
+# migrate_locally: true
+#
+#
+# run_tests can be either, true, false, an array or a string.
+# If set to false, tests will be skipped (not recommended unless you know what you are doing).
+# If set to true, it will run "rspec spec".
+# If set to an array or string, the command(s) will be ran.
+#
+# run_tests: true
+#
+#
+# use_tags is useful for deploying to production.
+# When set to true, a tag will be generated with the format
+# "#{environment}-#{Time.now.strftime('%Y-%m-%dT%H%M%S')}".
+#
+# use_tags: false
+#
+#
+# database_tasks are what rake tasks will be run on the server after deploying.
+# It is currently limited to rake tasks and can accept a string or an array:
+#
+# database_tasks:
+#   - "db:migrate"
+#   - "db:seed"
+# or:
+# database_tasks: "db:migrate db:seed"
+#
+# database_tasks:
+#   - "db:migrate"
+#   - "db:seed"
+#
+# It can be disabled by setting it to false.
+#
+# It can be disabled by setting it to false.
+#
+# You should change the settings below.
+#
+# That's it! Have fun!
+#
+staging:
+  app: my-app-staging
+production:
+  app: my-app-production
