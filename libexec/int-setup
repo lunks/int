@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Usage: int setup
+# Summary: RUN THIS FIRST -- Copies an example .int to your current directory.
+# Help: This is first command to run.
+# This will copy an example with all the defaults and some explanation
+# on what each setting does.
+# 
+# Your .int should look something like this:
+#
+#staging:
+#  app: my-app-staging
+#production:
+#  app: my-app-production
+#
+echo "Copying .int to `pwd`..."
+
+cp -v `(dirname $0)`/../.int-example `pwd`/.int
