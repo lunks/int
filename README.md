@@ -65,7 +65,7 @@ You can checkout the list of tasks on the [int-run](libexec/int-run) command.
 
 * Add your Heroku production app to `.int`:
 
-```yaml
+```yml
 production:
   app: my-app-production
 ```
