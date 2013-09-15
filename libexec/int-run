@@ -8,86 +8,204 @@
 # * Lock integration for you;
 # * Pull the latest changes from the git repository;
 # * Run bundle install;
-# * Migrate the database (unless INT_DISABLE_MIGRATE is set to true);
+# * Migrate the database;
 # * Run all specs;
-# * Push to the git repo.
-# * Deploys to Heroku to the app set as APP on .rvmrc.
+# * Push to the git repo;
+# * Deploys to Heroku.
 #
-# Currently, there are additional tasks that you can add.
-#
-# Pre tasks:
-# Pre tasks runs before int pulls changes from the remote repo.
-# Just add the commands, separated by comma, on your .rvmrc:
-# PRE_TASKS=rake project:custom_task,echo "I'm ready!"
-#
-# Post tasks:
-# Post tasks run after the changes have been pushed to Heroku.
-# Just add the commands, separated by comma, on your .rvmrc:
-# POST_TASKS=rake hipchat:notify,rake dashboard:deploy_payload
+# For more info, run "int setup".
 
-def tasks
-  [pre_tasks, 'int gitpull', 'int bundle', migrate_task, 'int spec', 'int push', 'int heroku-deploy', post_tasks].flatten
-end
-
-def migrate_task
-  'int migrate' unless ENV["INT_DISABLE_MIGRATE"] == 'true'
-end
-
-def pre_tasks
-  if ENV['PRE_TASKS'] != nil
-    ENV['PRE_TASKS'].split(',')
-  else
-    []
+require 'yaml'
+class Hash
+  def deep_merge!(other_hash)
+    other_hash.each_pair do |k,v|
+      tv = self[k]
+      self[k] = tv.is_a?(Hash) && v.is_a?(Hash) ? tv.deep_merge(v) : v
+    end
+    self
+  end
+  def deep_merge(other_hash)
+    dup.deep_merge!(other_hash)
   end
 end
+class Runner
+  TASKS = [:check_branch, :minimum_coverage_check, :set_environment_variables, :pre_tasks, :bundle, :checkgit, :migrate_locally, :lock, :test_tasks, :push, :deploy, :database_tasks, :post_tasks, :unlock]
 
-def post_tasks
-  if ENV['POST_TASKS'] != nil
-    ENV['POST_TASKS'].split(',')
-  else
-    []
+  attr_reader :config, :app, :environment
+  def initialize(current_dir, environment)
+    @environment = (environment || "staging")
+    @config_file_location = "#{current_dir.chomp}/.int"
+    @config = load_config[@environment]
+    @app = config["app"]
   end
-end
 
-def unlock
-  system('int unlock')
-end
-
-def lock
-  abort_if_cmd_fails 'int lock'
-end
-
-def checkgit
-  abort_if_cmd_fails 'int checkgit'
-end
-
-def check_for_app_var
-  raise "There is no APP in your environment. Please add your Heroku app as an environment variable named APP." if ENV['APP'] == nil
-end
-
-def run_tasks
-  tasks.each do |task|
-    abort_if_cmd_fails task do
-      # An error has occurred, lets unlock anyway
-      unlock
+  def load_config
+    default_config = YAML.load(File.read(File.expand_path(File.dirname(__FILE__)) + "/../.int-default"))
+    if File.file?(@config_file_location)
+      puts "Loading config file from #{@config_file_location}..."
+      default_config.deep_merge(YAML.load(File.read(@config_file_location)))
+    else
+      puts "You don't have a int config file. Assuming defaults."
+      default_config
     end
   end
-  #We successfully integrated
-  unlock
-end
 
-def abort_if_cmd_fails command, &block
-  return if command.nil?
-  exec = system command
-  unless exec == true
-    yield if block_given?
-    exit 1
+  def run!
+    TASKS.each do |task|
+      send(task)
+    end
+  end
+
+  private
+    def minimum_coverage_check
+      spec_helper = File.read('./spec/spec_helper.rb')
+      expected_coverage = config["minimum_coverage"]
+      minimum_coverage = spec_helper.match(/minimum_coverage (\d+)/)
+      return unless expected_coverage
+      if minimum_coverage.nil?
+        abort <<STR
+You have not declared a minimum_coverage on your spec_helper.rb.
+Please make sure you have simplecov in your Gemfile as:
+gem 'simplecov', require: false
+
+And add this to your spec/spec_helper.rb:
+if ENV['coverage'] == 'on'
+  require 'simplecov'
+  SimpleCov.start 'rails' do
+    minimum_coverage 100 # This is the important line
   end
 end
+STR
+      end
+      minimum_coverage = minimum_coverage[1]
+      if expected_coverage == true
+        expected_coverage = 100
+      end
+      if expected_coverage.to_i == minimum_coverage.to_i
+        puts "Minimum coverage is locked at #{expected_coverage}."
+      else
+        abort "Your code coverage settings differ.
+Expected minimum coverage by int: #{expected_coverage}
+minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
+      end
+    end
 
-check_for_app_var
-checkgit
-lock
-run_tasks
+    def check_branch
+      correct_branch = config["branch"]
+      return unless correct_branch
+      if current_branch != correct_branch
+        abort "Incorrect branch. You are on '#{current_branch}' branch but you are supposed to be in '#{correct_branch}' branch."
+      end
+    end
+
+    def current_branch
+      @current_branch ||= `git rev-parse --abbrev-ref HEAD`.strip
+    end
+
+    def set_environment_variables
+      ENV["APP"] = app
+      ENV["coverage"] = "on"
+    end
+
+    def push
+      use_tags = config["use_tags"]
+      if use_tags
+        tag_name = "#{environment}-#{Time.now.strftime('%Y-%m-%dT%H%M%S')}"
+        puts "Generating tag '#{tag_name}'..."
+        abort_if_cmd_fails "git tag #{tag_name}"
+      end
+      abort_if_cmd_fails "git push origin #{current_branch}#{" --tags" if use_tags}"
+    end
+
+    def deploy
+      puts "Deploying on app '#{app}'..."
+      abort_if_cmd_fails "git push git@heroku.com:#{app}.git #{current_branch}:master"
+    end
+
+    def database_tasks
+      tasks = config["database_tasks"]
+      return unless tasks
+      if tasks.is_a? Array
+        tasks.join(' ')
+      end
+      abort_if_cmd_fails "heroku run rake #{tasks} --app #{app}"
+    end
+
+    def lock
+      abort_if_cmd_fails "int lock"
+    end
+
+    def test_tasks
+      tasks_to_run = config["run_tests"]
+      if tasks_to_run == true
+        puts "Running default test task (rspec spec)..."
+        abort_if_cmd_fails "rspec spec"
+      elsif (tasks_to_run.is_a? Array) || (tasks_to_run.is_a? String)
+        abort_if_cmd_fails tasks_to_run
+      elsif !tasks_to_run
+        puts "Not running any tests tasks as configured in #{@config_file_location}. Skipping..."
+      end
+    end
+
+    def checkgit
+      abort_if_cmd_fails "int checkgit", false
+    end
+
+    def bundle
+      return unless config["bundle"] == true
+      puts "Running bundle..."
+      abort_if_cmd_fails "int bundle", false
+    end
+
+    def migrate_locally
+      return unless config["migrate_locally"] == true
+      puts "Migrating database..."
+      abort_if_cmd_fails "int migrate", false
+    end
+
+    def unlock
+      system "int unlock"
+    end
+
+    def pre_tasks
+      run_extra_tasks(config["pre_tasks"])
+    end
+
+    def post_tasks
+      run_extra_tasks(config["post_tasks"])
+    end
+
+    def run_extra_tasks(tasks)
+      tasks_to_run = tasks
+      if (tasks_to_run.is_a? Array) || (tasks_to_run.is_a? String)
+        puts "Running pre tasks..."
+        abort_if_cmd_fails tasks_to_run
+      end
+    end
+
+    def abort_if_cmd_fails command, output = true, &block
+      commands = Array(command).compact
+      return if commands.empty?
+      commands.each do |c|
+        puts "Running '#{c}'..." if output
+        return_status = system c
+        unless return_status == true
+          yield if block_given?
+          exit($?.to_i)
+        end
+      end
+    rescue SystemExit, Interrupt => e
+      if e.class == Interrupt
+        puts "\n\e[31;1mctrl-c detected, unlocking. (please do not hit ctrl-c again)\e[0m"
+      else
+        puts "\e[31mAborting. Error when running: '#{command}', unlocking.\e[0m"
+      end
+      unlock
+      exit($?.to_i)
+    end
+end
+
+runner = Runner.new(`pwd`, ARGV[0])
+runner.run!
 puts "Integrated successfully."
 exit 0
