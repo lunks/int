@@ -2,7 +2,3 @@
 # Usage: int bundle
 # Help: This will run `bundle install` and install the required gems on the current project.
 bundle --quiet
-if [[ $? -ne 0 ]]
-then
-  exit 1
-fi

@@ -1,6 +1,2 @@
 #!/usr/bin/env bash
 rake db:migrate db:test:prepare
-if [[ $? -ne 0 ]]
-then
-  exit 1
-fi
