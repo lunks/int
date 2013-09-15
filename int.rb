@@ -1,6 +1,6 @@
 require 'formula'
 class Int < Formula
-  head 'https://github.com/Helabs/int.git', :using => :git, :branch => 'stable'
+  head 'https://github.com/Helabs/int.git', :using => :git
 
   def install
     prefix.install Dir["*"]
