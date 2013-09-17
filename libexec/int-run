@@ -29,7 +29,7 @@ class Hash
   end
 end
 class Runner
-  TASKS = [:check_branch, :minimum_coverage_check, :set_environment_variables, :pre_tasks, :bundle, :checkgit, :migrate_locally, :lock, :test_tasks, :push, :deploy, :database_tasks, :post_tasks, :unlock]
+  TASKS = [:check_branch, :minimum_coverage_check, :set_environment_variables, :checkgit, :pull, :bundle, :migrate_locally, :lock, :test_tasks, :push, :deploy, :database_tasks, :unlock]
 
   attr_reader :config, :app, :environment
   def initialize(current_dir, environment)
@@ -37,6 +37,7 @@ class Runner
     @config_file_location = "#{current_dir.chomp}/.int"
     @config = load_config[@environment]
     @app = config["app"]
+    @can_unlock = false
   end
 
   def load_config
@@ -45,8 +46,7 @@ class Runner
       puts "Loading config file from #{@config_file_location}..."
       default_config.deep_merge(YAML.load(File.read(@config_file_location)))
     else
-      puts "You don't have a int config file. Assuming defaults."
-      default_config
+      abort "Please run 'int setup'."
     end
   end
 
@@ -57,6 +57,10 @@ class Runner
   end
 
   private
+    def can_unlock?
+      @can_unlock
+    end
+
     def minimum_coverage_check
       spec_helper = File.read('./spec/spec_helper.rb')
       expected_coverage = config["minimum_coverage"]
@@ -102,6 +106,11 @@ minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
       @current_branch ||= `git rev-parse --abbrev-ref HEAD`.strip
     end
 
+    def pull
+      puts "Pulling changes from the repository..."
+      system "git pull --rebase"
+    end
+
     def set_environment_variables
       ENV["APP"] = app
       ENV["coverage"] = "on"
@@ -133,6 +142,7 @@ minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
 
     def lock
       abort_if_cmd_fails "int lock"
+      @can_unlock = true
     end
 
     def test_tasks
@@ -167,22 +177,6 @@ minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
       system "int unlock"
     end
 
-    def pre_tasks
-      run_extra_tasks(config["pre_tasks"])
-    end
-
-    def post_tasks
-      run_extra_tasks(config["post_tasks"])
-    end
-
-    def run_extra_tasks(tasks)
-      tasks_to_run = tasks
-      if (tasks_to_run.is_a? Array) || (tasks_to_run.is_a? String)
-        puts "Running pre tasks..."
-        abort_if_cmd_fails tasks_to_run
-      end
-    end
-
     def abort_if_cmd_fails command, output = true, &block
       commands = Array(command).compact
       return if commands.empty?
@@ -191,17 +185,20 @@ minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
         return_status = system c
         unless return_status == true
           yield if block_given?
+          unlock if can_unlock?
           exit($?.to_i)
         end
       end
     rescue SystemExit, Interrupt => e
-      if e.class == Interrupt
-        puts "\n\e[31;1mctrl-c detected, unlocking. (please do not hit ctrl-c again)\e[0m"
-      else
-        puts "\e[31mAborting. Error when running: '#{command}', unlocking.\e[0m"
+      if can_unlock?
+        if e.class == Interrupt
+          puts "\n\e[31;1mctrl-c detected, unlocking. (please do not hit ctrl-c again)\e[0m"
+        else
+          puts "\e[31mAborting. Error when running: '#{command}', unlocking.\e[0m"
+        end
+        unlock
+        exit($?.to_i)
       end
-      unlock
-      exit($?.to_i)
     end
 end
 
