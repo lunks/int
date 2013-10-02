@@ -197,8 +197,8 @@ minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
           puts "\e[31mAborting. Error when running: '#{command}', unlocking.\e[0m"
         end
         unlock
-        exit($?.to_i)
       end
+      exit($?.to_i)
     end
 end
 
