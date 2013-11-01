@@ -118,12 +118,15 @@ minimum_coverage declared on your spec/spec_helper.rb: #{minimum_coverage}."
 
     def push
       use_tags = config["use_tags"]
+      remotes = config["remotes"]
       if use_tags
         tag_name = "#{environment}-#{Time.now.strftime('%Y-%m-%dT%H%M%S')}"
         puts "Generating tag '#{tag_name}'..."
         abort_if_cmd_fails "git tag #{tag_name}"
       end
-      abort_if_cmd_fails "git push origin #{current_branch}#{" --tags" if use_tags}"
+      remotes.each do |remote|
+        abort_if_cmd_fails "git push #{remote} #{current_branch}#{" --tags" if use_tags}"
+      end
     end
 
     def deploy

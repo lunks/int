@@ -1,5 +1,7 @@
 # vim: set ft=yaml:
 defaults: &defaults
+  remotes:
+    - origin
   bundle: true
   database_tasks: 'db:migrate db:seed'
   run_tests: true
